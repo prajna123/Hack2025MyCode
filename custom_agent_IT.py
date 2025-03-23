@@ -19,13 +19,13 @@ class CustomAgentWrapperIT:
     """Wrapper for managing a custom LLM-powered agent with VectorDB"""
 
     def __init__(self, api_key):
-        """Initialize the custom agent with MongoDB documentation"""
+        """Initialize the custom agent with Network, splunk, microsoft documentation"""
         print("started**********")
         self.api_key = api_key
         print("api key", self.api_key)
         self.llm = ChatOpenAI(model_name="gpt-4", openai_api_key=self.api_key)
 
-        # ✅ Step 1: Load MongoDB Documentation
+        # ✅ Step 1: Load All Documentation
         loader1 = WebBaseLoader("https://support.microsoft.com/en-us")
         loader2 = WebBaseLoader("https://learn.microsoft.com/en-us/windows/release-health/status-windows-11-21h2")
         loader3 = WebBaseLoader("https://docs.citrix.com/")
@@ -35,11 +35,13 @@ class CustomAgentWrapperIT:
         docs2 = loader2.load()
         docs3 = loader3.load()
 
-        word_loader = UnstructuredFileLoader("TroubleshootingDocs/Network_Troubleshooting_Guideline.docx")  # Use .doc for older formats
-        word_docs = word_loader.load()
+        word_loader1 = UnstructuredFileLoader("TroubleshootingDocs/Network_Troubleshooting_Guideline.docx")  # Use .doc for older formats
+        word_loader2 = UnstructuredFileLoader("TroubleshootingDocs/Splunk_Troubleshooting_Guideline.docx")
+        word_docs1 = word_loader1.load()
+        word_docs2 = word_loader2.load()
 
         # Merge all documents into a single list
-        docs = docs1 + docs2 + docs3 + word_docs
+        docs = docs1 + docs2 + docs3 + word_docs1 + word_docs2
 
         documents = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200).split_documents(docs)
 
@@ -48,7 +50,7 @@ class CustomAgentWrapperIT:
 
         # ✅ Step 4: Define Retriever
         self.retriever = vectordbmongo.as_retriever()
-        retriever_tool=create_retriever_tool(self.retriever,"mongo-faq-search","Search any information about MongoDB ")
+        retriever_tool=create_retriever_tool(self.retriever,"mongo-faq-search","Search any information about Integrated Platform Support ")
         self.tools=[retriever_tool]
 
         # ✅ Step 5: Create Retrieval QA Chain
@@ -79,7 +81,7 @@ class CustomAgentWrapperIT:
     def query(self, user_input):
         """Executes query with both the agent and the vectorDB"""
         try:
-            # First, search from MongoDB vectorDB
+            # First, search from vectorDB
             rag_response = self.qa_chain.run(user_input)
             print("rag_response", rag_response) 
 

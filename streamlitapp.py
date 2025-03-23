@@ -18,6 +18,12 @@ def checkGoogle():
     st.session_state["user_query"] = "Open Google"
     print("Suggestion clicked", st.session_state.get("user_query"))
 
+def checkSplunk():
+    st.session_state["user_query"] = "CheckSplunkDashboard"
+    print("Suggestion clicked", st.session_state.get("user_query"))
+    #print("Suggestion clicked for splunk_input_data", st.session_state.get("splunk_input_data"))
+    
+
 
 
 # Sidebar: API Key Input
@@ -42,6 +48,12 @@ for message in st.session_state.chat_history:
 
 if "user_query" not in st.session_state:
     st.session_state["user_query"] = None
+
+if "form_submitted" not in st.session_state:
+    st.session_state["form_submitted"] = False
+
+if "splunk_input_data" not in st.session_state:
+    st.session_state["splunk_input_data"] = {}
 # User input
 user_query = st.chat_input("Ask me anything...") or st.session_state.get("user_query")
 
@@ -52,7 +64,7 @@ if user_query:
     # ✅ Call agent with vectorDB search
     if any(word in user_query.lower() for word in ["network", "internet"]):
         response = st.session_state.agent.query(user_query)
-
+        st.chat_message("assistant").write(response)
         # ✅ Display Quick-Reply Buttons for Further Help
         st.write("Need more help? Try these:")
         st.button('Check Google Services', on_click=checkGoogle)
@@ -62,15 +74,58 @@ if user_query:
         loop = asyncio.ProactorEventLoop()
         asyncio.set_event_loop(loop)
         response = loop.run_until_complete(OpenWebsite.open_website())
+        st.chat_message("assistant").write(response)
     
     elif "ping" in user_query.lower():
         response = OpenWebsite.check_network_connectivity()
-    else:
-        response = st.session_state.agent.query(user_query)
-    print("User response", response)
+        st.chat_message("assistant").write(response)
+    
+    elif user_query == "CheckSplunkDashboard":
+        print("Opening splunk suggestions", user_query)
+        print(f"Fetching splunk input data {st.session_state.get("splunk_input_data")}")
+        loop = asyncio.ProactorEventLoop()
+        asyncio.set_event_loop(loop)
+        response = loop.run_until_complete(OpenWebsite.search_splunk())
+        st.chat_message("assistant").write(response)
+    # elif any(word in user_query.lower() for word in ["splunk", "log", "event"]):
+    #     print("Initial Splunk", user_query)
+    #     response = st.session_state.agent.query(user_query)
+    #     st.write("Try execute query in splunk dashboard:")
+    #     fixed_keys = ["index", "host", "source", "sourcetype"]
+    #     with st.form("user_input_form"):
+    #         input_data = {}
+    #         for key in fixed_keys:
+    #             input_data[key] = st.text_input(f"{key}:", key=f"input_{key}")
 
-    st.chat_message("assistant").write(response)
+    #         submitted = st.form_submit_button("Submit")
+            
+    #     if submitted:
+    #         st.session_state["form_submitted"] = True
+    #         st.session_state["splunk_input_data"] = input_data  # Store data
+    #         st.experimental_rerun()
+    elif any(word in user_query.lower() for word in ["splunk", "log", "event"]):
+        print("Initial Splunk", user_query)
+        response = st.session_state.agent.query(user_query)
+        st.chat_message("assistant").write(response)
+        st.write("Try execute query in splunk dashboard:")
+        st.button('Check Splunk Services', on_click=checkSplunk)
+        
+
+
+    else:
+        print("Generic Response")
+        response = st.session_state.agent.query(user_query)
+        st.chat_message("assistant").write(response)
+    #print("User response", response)
+
+    #st.chat_message("assistant").write(response)
 
     # Save chat history
     st.session_state.chat_history.append({"role": "user", "content": user_query})
     st.session_state.chat_history.append({"role": "assistant", "content": response})
+
+if st.session_state["form_submitted"]:
+    st.write("✅ Form Submitted Successfully!")
+    st.write(st.session_state["splunk_input_data"])  # Debugging
+    print("🚀 Form Submitted:", st.session_state["splunk_input_data"])
+    st.session_state["form_submitted"] = False
