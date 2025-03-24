@@ -1,0 +1,34 @@
+Network Troubleshooting Guideline:
+Network troubleshooting involves systematically identifying, diagnosing, and resolving issues within a computer network, ensuring devices can communicate effectively, minimizing downtime, and addressing security breaches. 
+Here's a breakdown of key aspects and techniques:
+1. Identifying the Problem:
+•	Gather Information: Collect details about the issue, including symptoms, affected users or devices, and any recent changes. 
+•	Define the Scope: Determine the extent of the problem and its impact. 
+•	Check for Outages: Use tools like Downdetector or contact your ISP to see if there's a widespread outage. 
+2. Steps of Network troubleshooting:
+•	Check Google, Google map, Google news are opening in browser
+•	Use Network Configuration Commands:
+o	ipconfig (Windows) or ifconfig (Unix-based systems) to display network configuration. 
+o	netstat to show active network connections. 
+•	Restart Router:
+o	ping to test reachability to a specific device. 
+•	Check Physical Connections: Ensure cables and hardware are properly connected and functional. 
+•	DNS Troubleshooting:
+o	Verify DNS settings and resolve issues related to domain name resolution. 
+o	Clear DNS cache using ipconfig /flushdns (Windows) or sudo systemd-resolve --flush-caches (Linux). 
+•	Speedtest.net: Test your local network upload/download speeds. 
+•	Network Protocol Troubleshooting: Understand and troubleshoot issues related to network protocols like TCP/IP. 
+•	Network Troubleshooting Applications: Utilize specialized software tools for network monitoring and analysis. 
+•	Review Database Logs: Examine logs for clues about network issues. 
+3. Network Troubleshooting Methodology:
+•	Systematic Approach: Follow a structured process for identifying and resolving problems. 
+•	Isolate the Problem: Focus on the specific area or component causing the issue. 
+•	Document Findings: Keep records of the troubleshooting steps and solutions. 
+•	Minimizing Downtime: Implement solutions quickly to reduce disruption to network users. 
+•	Security Breaches: Network troubleshooting can also be used to identify and address security threats. 
+4. Importance of Network Troubleshooting:
+•	Ensures Network Functionality: Maintains smooth communication and connectivity.
+•	Minimizes Downtime: Reduces disruptions to network users.
+•	Improves Network Performance: Identifies and resolves issues that impact speed and efficiency.
+•	Enhances Security: Helps detect and address potential security vulnerabilities. 
+

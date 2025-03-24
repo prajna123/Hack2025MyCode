@@ -14,6 +14,38 @@ class OpenWebsite:
             print("Network is unreachable")
             return "❌ Network is unreachable!"
 
+    @staticmethod    
+    def check_netstat():
+        try:
+            result = subprocess.run("netstat -an | findstr TCP", capture_output=True, text=True, shell=True)
+            if result.returncode == 0:
+                print("Netstat Output:\n")
+                print(result.stdout)  # Display command output
+                return result.stdout
+            else:
+                print("Error running netstat:", result.stderr)  # Display errors if any
+                return "Error running netstat"
+            
+        except Exception as e:
+            print("Exception occurred:", str(e))
+            return "Error running netstat"
+
+    @staticmethod
+    def check_ipconfig():
+        try:
+            result = subprocess.run(["ipconfig"], capture_output=True, text=True, shell=True)
+
+            if result.returncode == 0:
+                print("IP Configuration:\n")
+                print(result.stdout)  # Display command output
+                return  "✅ " + result.stdout
+            else:
+                print("Error running ipconfig:", result.stderr)  # Display errors if any
+                return "❌Error running ipconfig"
+            
+        except Exception as e:
+            print("Exception occurred:", str(e))
+            return "❌ Error running ipconfig"
 
 
     @staticmethod

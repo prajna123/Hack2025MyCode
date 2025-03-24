@@ -23,6 +23,16 @@ def pingGoogle():
     st.session_state["user_query"] = "Ping Google"
     print("Suggestion clicked", st.session_state.get("user_query"))
 
+def runNetstat():
+    print("Ping Google")
+    st.session_state["user_query"] = "Run Netstat"
+    print("Suggestion clicked", st.session_state.get("user_query"))
+
+def checkIpconfig():
+    print("Check ipconfig")
+    st.session_state["user_query"] = "Check ipconfig"
+    print("Suggestion clicked", st.session_state.get("user_query"))
+
 def checkSplunk():
     st.session_state["user_query"] = "CheckSplunkDashboard"
     print("Suggestion clicked", st.session_state.get("user_query"))
@@ -74,18 +84,43 @@ if user_query:
         asyncio.set_event_loop(loop)
         response = loop.run_until_complete(OpenWebsite.open_website())
         st.chat_message("assistant").write(response)
+        st.button('Check Google Services', on_click=checkGoogle)
+        st.button('Ping Google Server', on_click=pingGoogle)
+        st.button('Run netstat', on_click=runNetstat)
+        st.button('Check ipconfig', on_click=checkIpconfig)
     elif "ping" in user_query.lower() or user_query in ["Ping Google"]:
         print("Ping suggestions came inside method", user_query)
         response = OpenWebsite.check_network_connectivity()
         st.chat_message("assistant").write(response)
-    if any(word in user_query.lower() for word in ["network", "internet"]):
+        st.button('Check Google Services', on_click=checkGoogle)
+        st.button('Ping Google Server', on_click=pingGoogle)
+        st.button('Run netstat', on_click=runNetstat)
+        st.button('Check ipconfig', on_click=checkIpconfig)
+    elif "netstat" in user_query.lower() or user_query in ["Run Netstat"]:
+        print("Ping suggestions came inside method", user_query)
+        response = OpenWebsite.check_netstat()
+        st.chat_message("assistant").write(response)
+        st.button('Check Google Services', on_click=checkGoogle)
+        st.button('Ping Google Server', on_click=pingGoogle)
+        st.button('Run netstat', on_click=runNetstat)
+        st.button('Check ipconfig', on_click=checkIpconfig)
+    elif "ipconfig" in user_query.lower() or user_query in ["Check ipconfig"]:
+        print("Ping suggestions came inside method", user_query)
+        response = OpenWebsite.check_ipconfig()
+        st.chat_message("assistant").write(response)
+        st.button('Check Google Services', on_click=checkGoogle)
+        st.button('Ping Google Server', on_click=pingGoogle)
+        st.button('Run netstat', on_click=runNetstat)
+        st.button('Check ipconfig', on_click=checkIpconfig)
+    elif any(word in user_query.lower() for word in ["network", "internet"]):
         response = st.session_state.agent.query(user_query)
         st.chat_message("assistant").write(response)
         # ✅ Display Quick-Reply Buttons for Further Help
         st.write("Need more help? Try these:")
         st.button('Check Google Services', on_click=checkGoogle)
         st.button('Ping Google Server', on_click=pingGoogle)
-    
+        st.button('Run netstat', on_click=runNetstat)
+        st.button('Check ipconfig', on_click=checkIpconfig)
     elif user_query == "CheckSplunkDashboard":
         print("Opening splunk suggestions", user_query)
         print(f"Fetching splunk input data {st.session_state.get("splunk_input_data")}")
