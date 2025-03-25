@@ -41,7 +41,7 @@ class CustomAgentWrapperIT:
 
         # Step 4: Define Retriever
         self.retriever = vectordb.as_retriever()
-        retriever_tool=create_retriever_tool(self.retriever,"mongo-faq-search","Search any information about Integrated Platform Support ")
+        retriever_tool=create_retriever_tool(self.retriever,"ips-faq-search","Search any information about Integrated Platform Support ")
         self.tools=[retriever_tool]
 
         # Step 5: Create Retrieval QA Chain
